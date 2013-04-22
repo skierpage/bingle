@@ -53,8 +53,20 @@ class Mingle:
 		info( debug )
 		if r.status_code is not 201:
 			info( 'something wrong' )
-	
-		
+		# should just return card num, not full API URL
+		return r.headers['location']
+
+	def updateCard( self, location, cardParams ):
+		# should use card num not full API URL
+		debug = "URL: %s" % location
+		info( debug )
+		info (cardParams )
+		r = requests.put( location, auth=self.auth, params=cardParams )
+		debug = "Status %d" % r.status_code
+		info( debug )
+		if r.status_code is not 200:
+			info( 'something wrong' )
+
 def info( out ):
 	if debug is True:
 		print "[INFO] %s" % out
@@ -87,28 +99,33 @@ if __name__ == "__main__":
 	# FIXME make this configurable by runtime arg
 	config.read( 'bingle.ini' )
 	auth = {'username': config.get('auth','username'), 'password': config.get('auth','password')}
+	debug = config.getboolean('debug','debug')
 	apiBaseUrl = config.get('urls','mingleApiBase')
+
+	# prepare Mingle instance
 	mingle = Mingle( auth, apiBaseUrl )
 
-	# update bugzilla feed link
 	feedUrl = getBugzillaFeedUrl( config.get('urls','bugzillaFeed') )
 	info( feedUrl )
 	feed = feedparser.parse( feedUrl )
 	info( len(feed.entries) )
+
 	for entry in feed.entries:
 		# look for card
 		foundBugs = mingle.findCardByName( 'Bug', entry.title )
 		if len( foundBugs ) > 0:
 			continue
 		cardParams = {
-			'card[name]': str( entry.title ),
+			'card[name]': entry.title.encode('ascii','ignore'),
 			'card[card_type_name]':'bug',
-			'card[description]': str( entry.id ), # URL to bug
+			'card[description]': entry.id.encode('ascii','ignore'), # URL to bug
 			'card[properties][][name]': 'Iteration',
 			'card[properties][][value]': '(Current iteration)',
 			'card[created_by]': auth['username']
-			#'card[properties][][name]': 'Status',
-			#'card[properties][][value]': 'In Analysis'
 		}
-		mingle.addCard( cardParams )
-		#sys.exit(0)	
+		cardLocation = mingle.addCard( cardParams )
+		cardParams = {
+			'card[properties][][name]': 'status',
+			'card[properties][][value]': 'In analysis'
+		}
+		mingle.updateCard( cardLocation, cardParams )
