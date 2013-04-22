@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
 import feedparser, requests, sys, ConfigParser, pickle, datetime
-bugzilla_atom_feed = 'https://bugzilla.wikimedia.org/buglist.cgi?f1=creation_ts&list_id=194515&o1=greaterthan&resolution=---&resolution=LATER&resolution=DUPLICATE&chfieldto=Now&query_format=advanced&chfield=%5BBug%20creation%5D&v1=2013-03-23%2000%3A00&component=MobileFrontend&product=MediaWiki%20extensions&ctype=atom'
-debug = True
 
 class Mingle:
 	auth = ()
