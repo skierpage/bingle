@@ -78,13 +78,13 @@ def getBugzillaFeedUrl( feedUrl ):
 	return feedUrl
 
 def getTimeFromPickle():
-	pFile = open( 'bingle.pickle', 'rb' )
 	try:
+		pFile = open( 'bingle.pickle', 'rb' )
 		fromTime = pickle.load( pFile )
+		pFile.close()
 	except:
 		fromTime = None
 	info( fromTime )
-	pFile.close()
 	return fromTime
 
 def pickleTime( timeToPickle ):
