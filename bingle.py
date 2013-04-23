@@ -32,6 +32,7 @@ class Mingle:
 		info( debug )
 		if r.status_code is not 200:
 			info( 'something wrong' )
+		r.raise_for_status()
 		info( r.json() )
 		return r.json()
 
@@ -51,6 +52,7 @@ class Mingle:
 		info( debug )
 		if r.status_code is not 201:
 			info( 'something wrong' )
+		r.raise_for_status()
 		# should just return card num, not full API URL
 		return r.headers['location']
 
@@ -64,6 +66,7 @@ class Mingle:
 		info( debug )
 		if r.status_code is not 200:
 			info( 'something wrong' )
+		r.raise_for_status()
 
 def info( out ):
 	if debug is True:
