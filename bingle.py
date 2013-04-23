@@ -14,9 +14,9 @@ class Mingle:
 
 	def setAuth( self, auth ):
 		if not isinstance(auth, dict):
-			info( 'bad auth' )
+			raise TypeError( 'Auth params must be passed as a dictionary.' )
 		if not ( auth.has_key('username') or auth.has_key('password')):
-			info( 'bad auth' )
+			raise NameError( '\'username\' and \'password\' dictionary keys not found.' )
 		self.auth = ( auth['username'], auth['password'] )
 
 	def setApiBaseUrl( self, apiBaseUrl ):
@@ -30,8 +30,6 @@ class Mingle:
 		r = requests.get( url, auth=self.auth, params=payload )
 		debug = "Status: %d" % r.status_code
 		info( debug )
-		if r.status_code is not 200:
-			info( 'something wrong' )
 		r.raise_for_status()
 		info( r.json() )
 		return r.json()
@@ -50,8 +48,6 @@ class Mingle:
 		info( cardParams )
 		debug = "Status: %d" % r.status_code
 		info( debug )
-		if r.status_code is not 201:
-			info( 'something wrong' )
 		r.raise_for_status()
 		# should just return card num, not full API URL
 		return r.headers['location']
@@ -64,8 +60,6 @@ class Mingle:
 		r = requests.put( location, auth=self.auth, params=cardParams )
 		debug = "Status %d" % r.status_code
 		info( debug )
-		if r.status_code is not 200:
-			info( 'something wrong' )
 		r.raise_for_status()
 
 def info( out ):
