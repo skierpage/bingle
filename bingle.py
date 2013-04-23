@@ -82,7 +82,8 @@ def getTimeFromPickle():
 		pFile.close()
 	except:
 		fromTime = None
-	info( fromTime )
+	debug = "From time: %s" % fromTime
+	info( debug )
 	return fromTime
 
 def pickleTime( timeToPickle ):
@@ -104,7 +105,7 @@ if __name__ == "__main__":
 	feedUrl = getBugzillaFeedUrl( config.get('urls','bugzillaFeed') )
 	info( feedUrl )
 	feed = feedparser.parse( feedUrl )
-	info( len(feed.entries) )
+	info( "Feed length: %d" % len(feed.entries) )
 
 	for entry in feed.entries:
 		# look for card
