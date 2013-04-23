@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import feedparser, requests, sys, ConfigParser, pickle, datetime
+import feedparser, requests, ConfigParser, pickle
+from datetime import datetime
 
 class Mingle:
 	auth = ()
@@ -67,7 +68,7 @@ def info( out ):
 		print "[INFO] %s" % out
 
 def getBugzillaFeedUrl( feedUrl ):
-	now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+	now = datetime.now().strftime('%Y-%m-%d %H:%M')
 	fromTime = getTimeFromPickle()
 	if fromTime is not None:
 		feedUrl = feedUrl + '&v1=%s' % fromTime
