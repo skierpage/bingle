@@ -3,6 +3,7 @@
 import feedparser, ConfigParser, pickle
 from datetime import datetime
 from mingle import Mingle
+from optparse import OptionParser
 
 def info( out ):
 	if debug is True:
@@ -33,9 +34,13 @@ def pickleTime( timeToPickle ):
 	pFile.close()
 
 if __name__ == "__main__":
+	parser = OptionParser()
+	parser.add_option( "-c", "--config", dest="config",
+					help="Path to bingle config file", default="bingle.ini" )
+	(options, args) = parser.parse_args()
 	config = ConfigParser.ConfigParser()
 	# FIXME make this configurable by runtime arg
-	config.read( 'bingle.ini' )
+	config.read( options.config )
 	auth = {'username': config.get('auth','username'), 'password': config.get('auth','password')}
 	debug = config.getboolean('debug','debug')
 	apiBaseUrl = config.get('urls','mingleApiBase')
