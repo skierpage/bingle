@@ -7,7 +7,7 @@ class Bingle:
 		self.setDebug( debug )
 		self.setPicklePath( picklePath )
 		if feedUrl is not None:
-		 self.setFeedUrl( feedUrl )
+			self.setFeedUrl( feedUrl )
 
 	def setPicklePath( self, picklePath ):
 		self.picklePath = picklePath
