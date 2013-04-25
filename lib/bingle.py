@@ -11,6 +11,8 @@ class Bingle:
 
 	def setPicklePath( self, picklePath ):
 		self.picklePath = picklePath
+		debug = "Pickle path: %s" % picklePath
+		self.info( debug )
 
 	def setDebug( self, debug ):
 		if not isinstance( debug, bool ):
@@ -35,6 +37,7 @@ class Bingle:
 			fromTime = pickle.load( pFile )
 			pFile.close()
 		except:
+			self.info( "Pickle file could not be opened" )
 			fromTime = None
 		debug = "From time: %s" % fromTime
 		self.info( debug )
@@ -51,6 +54,6 @@ class Bingle:
 		return feed.entries
 
 	def setFeedUrl( self, feedUrl ):
-		self.feedUrl = feedUrl
+		self.feedUrl = self.getBugzillaFeedUrl( feedUrl )
 		self.info( feedUrl )
 
