@@ -24,7 +24,7 @@ class Mingle:
 
 	def executeMql( self, mql ):
 		reqUrl = self.getFullApiReqUrl( 'cards/execute_mql.json' )
-		payload = {'mql':mql.encode('ascii')}
+		payload = {'mql':mql.encode('ascii','ignore')}
 		self.mrequest = MingleRequest( reqUrl, payload=payload, auth=self.auth )
 		r = self.mrequest.makeRequest()
 		r.raise_for_status()
