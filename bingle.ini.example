@@ -5,6 +5,11 @@ password=pass
 [debug]
 debug=False
 
+[paths]
+# path to pickle file (can be created on the fly)
+picklePath=bingle.pickle
+
 [urls]
-mingleApiBase=https://mingle.corp.wikimedia.org/api/v2/projects/mobile
+# note the trailing slash is important
+mingleApiBase=https://mingle.corp.wikimedia.org/api/v2/projects/mobile/
 bugzillaFeed=https://bugzilla.wikimedia.org/buglist.cgi?bug_status=NEW&component=MobileFrontend&f1=creation_ts&list_id=195375&o1=greaterthan&product=MediaWiki%20extensions&query_format=advanced&resolution=---&resolution=LATER&resolution=DUPLICATE&title=Bug%20List&ctype=atom
