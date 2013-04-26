@@ -56,5 +56,5 @@ class Bingle:
 
 	def setFeedUrl( self, feedUrl ):
 		self.feedUrl = self.getBugzillaFeedUrl( feedUrl )
-		self.info( feedUrl )
+		self.info( self.feedUrl )
 
