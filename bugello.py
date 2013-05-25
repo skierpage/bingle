@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
 	for entry in bingle.getFeedEntries():
 		#1 look for existence of the card
-		cardTitle =  entry.title.encode('ascii','ignore')
+		cardTitle =  entry.title.encode('UTF-8','ignore')
 		cardQueryParams = {
 			'query': cardTitle,
 			'card_fields': 'name',
