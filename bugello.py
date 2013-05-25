@@ -54,7 +54,11 @@ if __name__ == "__main__":
 		sprintNum = sprintNumRegex.search( board['name'] )
 		if sprintNum:
 			# do we really need name? may come in handy
-			boards.append( (sprintNum.group(0), board['id'], board['name'] ) )
+			boards.append(
+				( int( sprintNum.group( 0 ) ),
+				board['id'],
+				board['name'] )
+			)
 	if not len(boards):
 		print "There are no valid boards for which to add cards."
 		exit(1)
