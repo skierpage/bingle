@@ -75,14 +75,15 @@ if __name__ == "__main__":
 	# don't try/except, because we can't do anything without this.
 	r.raise_for_status()
 	tListId = None
+	tListName = config.get( 'trello', 'targetListName' )
 	for tList in r.json():
-		if tList['name'].lower() == config.get( 'trello', 'targetListName' ).lower():
+		if tList['name'].lower() == tListName.lower():
 			tListId = tList['id']
 			if debug:
 				print "List id: %s" % tListId
 			break
 	if not tListId:
-		print "Could not find 'Ready for Dev' list."
+		print "Could not find list: %s" % tListName
 		sys.exit(1)
 
 	bingle = Bingle( debug=debug, picklePath=picklePath, feedUrl=config.get('urls','bugzillaFeed') )
