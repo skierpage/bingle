@@ -76,8 +76,10 @@ if __name__ == "__main__":
 	r.raise_for_status()
 	tListId = None
 	for tList in r.json():
-		if tList['name'] == config.get( 'trello', 'targetListName' ):
+		if tList['name'].lower() == config.get( 'trello', 'targetListName' ).lower():
 			tListId = tList['id']
+			if debug:
+				print "List id: %s" % tListId
 			break
 	if not tListId:
 		print "Could not find 'Ready for Dev' list."
