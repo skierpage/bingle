@@ -65,6 +65,8 @@ if __name__ == "__main__":
 	# pick the biggest sprintNum
 	boards.sort()
 	boardId = boards[-1][1]
+	if debug:
+		print "Board name: %s" % boards[-1][2]
 
 	# determine 'Ready for Dev' list
 	# @TODO is this *always* the name of the list to use?
