@@ -45,3 +45,4 @@ if __name__ == "__main__":
 		}
 		mingle.updateCard( cardLocation, cardParams )
 		bingle.info( mingle.dumpRequest() )
+	bingle.updatePickleTime()
