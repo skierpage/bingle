@@ -47,7 +47,7 @@ class Bingle:
 		if not time:
 			time = self.newPickleTime
 		debug = "Pickling time: %s" % time
-		self.debug( debug )
+		self.info( debug )
 		self.pickleTime( time )
 
 	def pickleTime( self, timeToPickle ):
