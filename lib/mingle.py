@@ -31,6 +31,8 @@ class Mingle:
 		return r.json()
 
 	def findCardByName( self, cardType, name ):
+		# Mingle removes extraneous spaces mid-string; do the same here
+		name = ' '.join(name.split())
 		mql = 'SELECT number WHERE Type=\'%s\' AND name=\'%s\'' % ( cardType, name.replace("'", "\\'"))
 		return self.executeMql( mql )
 
