@@ -4,6 +4,48 @@ import ConfigParser, sys, requests, re
 from optparse import OptionParser
 from lib.bingle import Bingle
 
+def getBoardId( baseParams, boardBaseName, debug=False, getLatest=False ):
+	boardQueryParams = {
+		'query': boardBaseName,
+		'modelTypes': 'boards',
+		'board_fields': 'name'
+	}
+	payload = dict( baseParams.items() + boardQueryParams.items() )
+	r = requests.get( 'https://trello.com/1/search', params=payload )
+	# don't try/except because if this fails, we can't go further anyway
+	r.raise_for_status()
+	boards = r.json()['boards']
+	if getLatest:
+		return getLatestBoardId( boards, debug )
+	else:
+		if not len(boards):
+			print "No board found by the name %s; exiting." % boardBaseName
+			sys.exit(1)
+		return boards[0]['id']
+
+def getLatestBoardId( boardsJson, debug=False ):
+	# sprint names are like 'Mobile App - Sprint 9'; we want to find the latest
+	sprintNumRegex = re.compile('\d+$')
+	boards = []
+	for board in boardsJson:
+		sprintNum = sprintNumRegex.search( board['name'] )
+		if sprintNum:
+			# do we really need name? may come in handy
+			boards.append(
+				( int( sprintNum.group( 0 ) ),
+				board['id'],
+				board['name'] )
+			)
+	if not len(boards):
+		print "There are no valid boards for which to add cards."
+		exit(1)
+	# pick the biggest sprintNum
+	boards.sort()
+	boardId = boards[-1][1]
+	if debug:
+		print "Board name: %s" % boards[-1][2]
+	return boardId
+
 if __name__ == "__main__":
 	# config stuff
 	parser = OptionParser()
@@ -36,37 +78,8 @@ if __name__ == "__main__":
 		'token': pin,
 	}
 
-	
+	boardId = getBoardId( baseParams, config.get( 'trello', 'boardBaseName' ), debug, config.getboolean( 'trello', 'useLatestBoard' ) )		
 	# determine current board
-	boardQueryParams = {
-		'query': config.get( 'trello', 'boardBaseName' ),
-		'modelTypes': 'boards',
-		'board_fields': 'name'
-	}
-	payload = dict( baseParams.items() + boardQueryParams.items() )
-	r = requests.get( 'https://trello.com/1/search', params=payload )
-	# don't try/except because if this fails, we can't go further anyway
-	r.raise_for_status()
-	# sprint names are like 'Mobile App - Sprint 9'; we want to find the latest
-	sprintNumRegex = re.compile('\d+$')
-	boards = []
-	for board in r.json()['boards']:
-		sprintNum = sprintNumRegex.search( board['name'] )
-		if sprintNum:
-			# do we really need name? may come in handy
-			boards.append(
-				( int( sprintNum.group( 0 ) ),
-				board['id'],
-				board['name'] )
-			)
-	if not len(boards):
-		print "There are no valid boards for which to add cards."
-		exit(1)
-	# pick the biggest sprintNum
-	boards.sort()
-	boardId = boards[-1][1]
-	if debug:
-		print "Board name: %s" % boards[-1][2]
 
 	# determine 'Ready for Dev' list
 	# @TODO is this *always* the name of the list to use?
