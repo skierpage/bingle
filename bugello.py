@@ -147,3 +147,4 @@ if __name__ == "__main__":
 				print "Reason: %s" % e
 			sys.exit(-1)
 			continue
+	bingle.updatePickleTime()
