@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import ConfigParser
+import re
 from optparse import OptionParser
 from lib.bingle import Bingle
 from lib.mingle import Mingle
@@ -45,4 +46,15 @@ if __name__ == "__main__":
 		}
 		mingle.updateCard( cardLocation, cardParams )
 		bingle.info( mingle.dumpRequest() )
+
+		# include bug ID if configured as a property
+		bugIdFieldName = config.get('mingle','bugIdFieldName')
+		if len( bugIdFieldName ):
+			bugId = re.search("^\[Bug (\d(.+))\]", title).group(1)
+			cardParams = {
+				'card[properties][][name]': bugIdFieldName,
+				'card[properties][][value]': bugId,
+			}
+			migle.updateCard( cardLocation, cardParams )
+			bingle.info( mingle.dumpRequest() )
 	bingle.updatePickleTime()

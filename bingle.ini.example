@@ -13,3 +13,7 @@ picklePath=bingle.pickle
 # note the trailing slash is important
 mingleApiBase=https://mingle.corp.wikimedia.org/api/v2/projects/mobile/
 bugzillaFeed=https://bugzilla.wikimedia.org/buglist.cgi?bug_status=NEW&component=MobileFrontend&f1=creation_ts&list_id=195375&o1=greaterthan&product=MediaWiki%20extensions&query_format=advanced&resolution=---&resolution=LATER&resolution=DUPLICATE&title=Bug%20List&ctype=atom
+
+[mingle]
+# If you have a card property to store the bugzilla bug ID, enter the name of the property here - otherwise, leave it blank.
+bugIdFieldName=Bug ID
