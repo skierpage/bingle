@@ -28,8 +28,7 @@ class Bingle:
 		fromTime = self.getTimeFromPickle()
 		if fromTime is not None:
 			feedUrl = feedUrl + '&v1=%s' % fromTime
-		debug = "Pickling time: %s" % now
-		self.pickleTime( now )
+		self.newPickleTime = now
 		return feedUrl
 
 	def getTimeFromPickle( self ):
@@ -43,6 +42,13 @@ class Bingle:
 		debug = "From time: %s" % fromTime
 		self.info( debug )
 		return fromTime
+
+	def updatePickleTime( self, time=None ):
+		if not time:
+			time = self.newPickleTime
+		debug = "Pickling time: %s" % time
+		self.info( debug )
+		self.pickleTime( time )
 
 	def pickleTime( self, timeToPickle ):
 		pFile = open( self.picklePath, 'w+b' )

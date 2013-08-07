@@ -1,0 +1,24 @@
+[debug]
+debug=True
+
+[paths]
+picklePath=bugello.pickle
+
+[urls]
+; bugzilla Feed URL that relies on a timestamp, but with timestamp query param left out
+bugzillaFeed=https://bugzilla.wikimedia.org/buglist.cgi?bug_status=NEW&component=MobileFrontend&f1=creation_ts&list_id=195375&o1=greaterthan&product=MediaWiki%20extensions&query_format=advanced&resolution=---&resolution=LATER&resolution=DUPLICATE&title=Bug%20List&ctype=atom
+
+[trello]
+; https://trello.com/docs/gettingstarted/index.html#getting-an-application-key
+appKey=
+appName=bugello
+; eg 'Mobile App'. If you always use the same board, just set this to the full board name (case sensitive).
+; If however you use a new board for each iteration, you can append an incrementing numeral to the board name
+; and Bugello will figure out the latest board to use.
+boardBaseName=Welcome Board
+; Set to 'True' if you use a new board for each iteration (see comment above for boardBaseName)
+useLatestBoard=False
+; eg 'Ready for Dev'
+targetListName=To Do
+; first time you run bugello, you should be given a URL from which to fetch your pin
+pin=
