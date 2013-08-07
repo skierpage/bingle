@@ -20,6 +20,7 @@ if __name__ == "__main__":
 	apiBaseUrl = config.get('urls', 'mingleApiBase')
 	bugCard = config.get('mingle', 'bugCard')
 	propertiesRaw = config.get('mingle', 'properties')
+	tags = config.get('mingle', 'tags')
 	properties = dict((key,value) for key,value in (prop.split(',') for prop in propertiesRaw.split(';') if prop.find(',') > -1))	
 
 	bingle = Bingle( debug=debug, picklePath=picklePath, feedUrl=config.get('urls','bugzillaFeed') )
@@ -38,7 +39,8 @@ if __name__ == "__main__":
 			'card[name]': entry.title.encode('ascii','ignore'),
 			'card[card_type_name]': bugCard,
 			'card[description]': entry.id.encode('ascii','ignore'), # URL to bug
-			'card[created_by]': auth['username']
+			'card[created_by]': auth['username'],
+			'card[tags]': tags
 		}
 		cardLocation = mingle.addCard( cardParams )
 		bingle.info( mingle.dumpRequest() ) 

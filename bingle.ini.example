@@ -17,7 +17,9 @@ bugzillaFeed=https://bugzilla.wikimedia.org/buglist.cgi?bug_status=NEW&component
 [mingle]
 #look out for capitalization!!!
 #these are default props for the mobile mingle project
-bugCard=Bug
+bugCard=bug
 properties='status','In analysis';'Iteration', '(Current iteration)'
+#comma separated list
+tags=bingle
 # If you have a card property to store the bugzilla bug ID, enter the name of the property here - otherwise, leave it blank.
 bugIdFieldName=Bug ID
