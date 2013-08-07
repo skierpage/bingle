@@ -17,5 +17,7 @@ bugzillaFeed=https://bugzilla.wikimedia.org/buglist.cgi?bug_status=NEW&component
 [mingle]
 #look out for capitalization!!!
 #these are default props for the mobile mingle project
-bugCard=Defect
+bugCard=bug
 properties='status','In analysis';'Iteration', '(Current iteration)'
+#comma separated list
+tags=bingle
