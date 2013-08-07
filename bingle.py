@@ -21,7 +21,7 @@ if __name__ == "__main__":
 	bugCard = config.get('mingle', 'bugCard')
 	propertiesRaw = config.get('mingle', 'properties')
 	tags = config.get('mingle', 'tags')
-	properties = dict((key,value) for key,value in (prop.split(',') for prop in propertiesRaw.split(';') if prop.find(',') > -1))	
+	properties = [(key,value) for key,value in (prop.split(',') for prop in propertiesRaw.split(';') if prop.find(',') > -1)]
 
 	bingle = Bingle( debug=debug, picklePath=picklePath, feedUrl=config.get('urls','bugzillaFeed') )
 
@@ -47,9 +47,10 @@ if __name__ == "__main__":
 
 		#properties	
 		for prop in properties:
+			print prop
 			cardParams = {
-				'card[properties][][name]': key,
-				'card[properties][][value]': value
+				'card[properties][][name]': prop[0],
+				'card[properties][][value]': prop[1]
 			}
 			mingle.updateCard( cardLocation, cardParams )
 		
@@ -58,11 +59,12 @@ if __name__ == "__main__":
 		# include bug ID if configured as a property
 		bugIdFieldName = config.get('mingle','bugIdFieldName')
 		if len( bugIdFieldName ):
-			bugId = re.search("^\[Bug (\d(.+))\]", title).group(1)
+			bugId = re.search("^\[Bug (\d(.+))\]", entry.title).group(1)
 			cardParams = {
 				'card[properties][][name]': bugIdFieldName,
 				'card[properties][][value]': bugId,
 			}
-			migle.updateCard( cardLocation, cardParams )
+			mingle.updateCard( cardLocation, cardParams )
 			bingle.info( mingle.dumpRequest() )
+		exit(-1)
 	bingle.updatePickleTime()
