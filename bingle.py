@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
 	for entry in bingle.getFeedEntries():
 		# look for card
-		print entry
+		bingle.info( "Bug XML: %s" % entry )
 		foundBugs = mingle.findCardByName( bugCard, entry.title )
 		bingle.info( mingle.dumpRequest() ) 
 		if len( foundBugs ) > 0:
