@@ -1,4 +1,4 @@
-bingle.ini
+*.ini
 *.pickle
 env/
 *.pyc
