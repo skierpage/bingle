@@ -6,7 +6,7 @@ from optparse import OptionParser
 
 from lib.bingle import Bingle
 from lib.mingle import Mingle
-from htmlparser import BugzillaSummaryTableParser
+from bugzillaSummaryParser import BugzillaSummaryTableParser
 
 
 if __name__ == "__main__":
