@@ -3,8 +3,11 @@
 import ConfigParser
 import re
 from optparse import OptionParser
+
 from lib.bingle import Bingle
 from lib.mingle import Mingle
+from htmlparser import BugzillaSummaryTableParser
+
 
 if __name__ == "__main__":
 	parser = OptionParser()
@@ -24,13 +27,23 @@ if __name__ == "__main__":
 	properties = [(key,value) for key,value in (prop.split(',') for prop in propertiesRaw.split(';') if prop.find(',') > -1)]
 
 	bingle = Bingle( debug=debug, picklePath=picklePath, feedUrl=config.get('urls','bugzillaFeed') )
-
+	bugzillaProperties = config.get('bugzilla', 'properties')
+	bugzilla = BugzillaSummaryTableParser(bugzillaProperties)
+	
 	# prepare Mingle instance
 	mingle = Mingle( auth, apiBaseUrl )
 
 	for entry in bingle.getFeedEntries():
 		# look for card
 		bingle.info( "Bug XML: %s" % entry )
+
+		bugzilla.clean_data()
+		if len(bugzillaProperties) > 0:
+			bugzilla.feed(entry.summary)
+			bugProperties = bugzilla.data
+		else:
+			bugProperties = []
+		bugProperties.extend(properties)
 		foundBugs = mingle.findCardByName( bugCard, entry.title )
 		bingle.info( mingle.dumpRequest() ) 
 		if len( foundBugs ) > 0:
@@ -40,20 +53,19 @@ if __name__ == "__main__":
 			'card[card_type_name]': bugCard,
 			'card[description]': entry.id.encode('ascii','ignore'), # URL to bug
 			'card[created_by]': auth['username'],
-			'card[tags]': tags
+			'card[tags][]': tags
 		}
 		cardLocation = mingle.addCard( cardParams )
 		bingle.info( mingle.dumpRequest() ) 
-
+		
 		#properties	
-		for prop in properties:
-			print prop
+		for prop in bugProperties:
 			cardParams = {
 				'card[properties][][name]': prop[0],
 				'card[properties][][value]': prop[1]
 			}
 			mingle.updateCard( cardLocation, cardParams )
-		
+
 		bingle.info( mingle.dumpRequest() )
 
 		# include bug ID if configured as a property
@@ -66,5 +78,4 @@ if __name__ == "__main__":
 			}
 			mingle.updateCard( cardLocation, cardParams )
 			bingle.info( mingle.dumpRequest() )
-		exit(-1)
 	bingle.updatePickleTime()
