@@ -64,11 +64,15 @@ class Bingle:
         self.info("Number of bugs found: %d" % len(feed.entries))
         return feed
 
-    def getBugEntries(self)
+    def getBugEntries(self):
         response = requests.get('https://bugzilla.wikimedia.org/jsonrpc.cgi', params=self.payload) 
-        # print response.json()
         self.info("Number of bugs found: %d" % len(response.json().get('result',{}).get('bugs')))
         return response.json().get('result',{}).get('bugs', {})
+
+    def getBugComments(self, payload, bug_id):
+        response = requests.get('https://bugzilla.wikimedia.org/jsonrpc.cgi', params=payload)
+        self.info("Number of comments found: %d" % len(response.json().get('result', {}).get('bugs', {}).get('%s' % bug_id).get('comments')))
+        return response.json().get('result', {}).get('bugs', {}).get('%s' % bug_id)
 
     def setFeedUrl(self, feedUrl):
         self.feedUrl = self.getBugzillaFeedUrl(feedUrl)
