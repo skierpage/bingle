@@ -3,6 +3,7 @@
 import ConfigParser
 import re
 import json
+import requests
 from optparse import OptionParser
 
 from lib.bingle import Bingle
@@ -11,7 +12,24 @@ from lib.mingle import Mingle
 
 def createDictionaryFromPropertiesList(properties):
     return dict((key, value) for key, value in (prop.split(',')
-                                                for prop in properties.split(';') if prop.find(',') > -1))
+               for prop in properties.split(';') if prop.find(',') > -1))
+
+
+def postComments(auth, apiBaseUrl, comments, mingle_id):
+	pos = mingle_id.rfind('/') + 1
+	mingle_id = mingle_id[pos:]
+	mingle_id = mingle_id.replace('.xml', '')
+	headers = {'content-type': 'application/x-www-form-urlencoded'}
+	url = '%s%s/%s/comments.xml' % (apiBaseUrl, 'cards', mingle_id)
+	comments = comments[1:]	#the first comment is already used in the summary of the mingle card.
+	for comment in comments.get('comments'):
+		payload = {'comment[content]': '%s\n#%s' % (comment.get('text'), mingle_id)}
+		response = requests.post(url, 
+								data=payload, 
+								auth=(auth.get('username'), auth.get('password')), 
+								headers=headers)
+
+
 
 if __name__ == "__main__":
     parser = OptionParser()
@@ -48,7 +66,6 @@ if __name__ == "__main__":
     mingle = Mingle(auth, apiBaseUrl)
 
     for bug in bingle.getBugEntries():
-        print bug
         bingle.info("Bug XML: %s" % bug)
 
         # look for card
@@ -61,9 +78,10 @@ if __name__ == "__main__":
         comment_payload = {'method': 'Bug.comments', 'params': json.dumps(
             [{'ids': ['%s' % bug.get('id')]}])}
         comments = bingle.getBugComments(comment_payload, bug.get('id'))
-        link = '\n\nFull bug report at https://bugzilla.wikimedia.org/show_bug.cgi?id=%s' % bug.get(
+        link = '<br><p>Full bug report at https://bugzilla.wikimedia.org/%s</p>' % bug.get(
             'id')
-
+        
+        # set common mingle parameters
         cardParams = {
             'card[name]': '[Bug %s] %s' % (bug.get('id', '---'), bug.get('summary').encode('ascii', 'ignore')),
             'card[card_type_name]': bugCard,
@@ -75,13 +93,15 @@ if __name__ == "__main__":
         cardLocation = mingle.addCard(cardParams)
         bingle.info(mingle.dumpRequest())
 
+        postComments(auth, apiBaseUrl, comments, cardLocation)
+
+        #set custom mingle properties
         properties = {}
         for key, value in bugzillaProperties.iteritems():
             properties[value] = bug.get(key, '')
 
         properties.update(mingleProperties)
 
-        # properties
         for prop, value in properties.iteritems():
             cardParams = {
                 'card[properties][][name]': prop,
