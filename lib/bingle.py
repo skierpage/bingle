@@ -1,11 +1,13 @@
 import pickle
+import requests
 import feedparser
 from datetime import datetime
 
 
 class Bingle:
 
-    def __init__(self, picklePath='bingle.pickle', debug=False, feedUrl=None):
+    def __init__(self, payload, picklePath='bingle.pickle', debug=False, feedUrl=None):
+        self.payload = payload
         self.setDebug(debug)
         self.setPicklePath(picklePath)
         if feedUrl is not None:
@@ -59,8 +61,14 @@ class Bingle:
 
     def getFeedEntries(self):
         feed = feedparser.parse(self.feedUrl)
-        self.info("Feed length: %d" % len(feed.entries))
-        return feed.entries
+        self.info("Number of bugs found: %d" % len(feed.entries))
+        return feed
+
+    def getBugEntries(self)
+        response = requests.get('https://bugzilla.wikimedia.org/jsonrpc.cgi', params=self.payload) 
+        # print response.json()
+        self.info("Number of bugs found: %d" % len(response.json().get('result',{}).get('bugs')))
+        return response.json().get('result',{}).get('bugs', {})
 
     def setFeedUrl(self, feedUrl):
         self.feedUrl = self.getBugzillaFeedUrl(feedUrl)
