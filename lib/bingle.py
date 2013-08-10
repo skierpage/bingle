@@ -65,3 +65,14 @@ class Bingle:
     def setFeedUrl(self, feedUrl):
         self.feedUrl = self.getBugzillaFeedUrl(feedUrl)
         self.info(self.feedUrl)
+
+class Bug:
+	def __init__(self,id,url,props={}):
+		self.id = id
+		self.url = url.encode('ascii','ignore')
+		self.addProps(props)
+
+	def addProps(self,props):
+		for k,v in props:
+			props[k] = props[k].encode('ascii', 'ignore')
+		self.props = props
