@@ -21,8 +21,8 @@ def postComments(auth, apiBaseUrl, comments, mingle_id):
 	mingle_id = mingle_id.replace('.xml', '')
 	headers = {'content-type': 'application/x-www-form-urlencoded'}
 	url = '%s%s/%s/comments.xml' % (apiBaseUrl, 'cards', mingle_id)
-	comments = comments[1:]	#the first comment is already used in the summary of the mingle card.
-	for comment in comments.get('comments'):
+	comments = comments.get('comments')[1:]	#the first comment is already used in the summary of the mingle card.
+	for comment in comments:
 		payload = {'comment[content]': '%s\n#%s' % (comment.get('text'), mingle_id)}
 		response = requests.post(url, 
 								data=payload, 
@@ -69,7 +69,7 @@ if __name__ == "__main__":
         bingle.info("Bug XML: %s" % bug)
 
         # look for card
-        foundBugs = mingle.findCardByName(bugCard, bug.get('summary'))
+        foundBugs = mingle.findCardByName(bugCard, bug.get('summary'), bug.get('id'))
         bingle.info(mingle.dumpRequest())
         if len(foundBugs) > 0:
             continue
