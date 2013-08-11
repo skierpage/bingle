@@ -45,8 +45,8 @@ if __name__ == "__main__":
     picklePath = config.get('paths', 'picklePath')
     apiBaseUrl = config.get('urls', 'mingleApiBase')
     bugCard = config.get('mingle', 'bugCard')
-    product = [config.get('bugzilla', 'product')]
-    component = [config.get('bugzilla', 'component')]
+    product = config.get('bugzilla', 'product').split(',')
+    component = config.get('bugzilla', 'component').split(',')
     tags = config.get('mingle', 'tags')
     bugzillaProperties = createDictionaryFromPropertiesList(
         config.get('bugzilla', 'properties'))
