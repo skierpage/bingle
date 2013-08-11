@@ -1,5 +1,4 @@
-This is a tool to follow a Bugzilla atom feed, and import new bugs from the
-feed into Mingle. More to come!
+This is a tool to import bugreports from Bugzilla and create Mingle cards from those reports. More to come!
 
 ## Requirements
 * feedparser: https://code.google.com/p/feedparser/
