@@ -100,7 +100,7 @@ class MingleRequest:
         return r
 
     def __makePostRequest(self, reqUrl):
-        r = requests.post(reqUrl, auth=self.auth, params=self.payload)
+        r = requests.post(reqUrl, auth=self.auth, data=self.payload)
         return r
 
     def __str__(self):

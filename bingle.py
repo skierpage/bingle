@@ -11,7 +11,7 @@ from lib.mingle import Mingle
 
 
 def createDictionaryFromPropertiesList(properties):
-    return dict((key, value) for key, value in (prop.split(',')
+    return dict((key.strip(), value.strip()) for key, value in (prop.split(',')
                for prop in properties.split(';') if prop.find(',') > -1))
 
 
@@ -28,8 +28,6 @@ def postComments(auth, apiBaseUrl, comments, mingle_id):
 								data=payload, 
 								auth=(auth.get('username'), auth.get('password')), 
 								headers=headers)
-
-
 
 if __name__ == "__main__":
     parser = OptionParser()
@@ -52,6 +50,8 @@ if __name__ == "__main__":
         config.get('bugzilla', 'properties'))
     mingleProperties = createDictionaryFromPropertiesList(
         config.get('mingle', 'properties'))
+    mapping = createDictionaryFromPropertiesList(
+        config.get('mapping', 'properties'))
     payload = {'method': 'Bug.search', 'params': json.dumps([{
         'product': product,
         'component': component,
@@ -67,7 +67,6 @@ if __name__ == "__main__":
 
     for bug in bingle.getBugEntries():
         bingle.info("Bug XML: %s" % bug)
-
         # look for card
         foundBugs = mingle.findCardByName(bugCard, bug.get('summary'), bug.get('id'))
         bingle.info(mingle.dumpRequest())
@@ -89,7 +88,7 @@ if __name__ == "__main__":
             'card[created_by]': auth['username'],
             'card[tags][]': tags  # is not supported by Mingle API currently
         }
-
+        
         cardLocation = mingle.addCard(cardParams)
         bingle.info(mingle.dumpRequest())
 
@@ -105,7 +104,7 @@ if __name__ == "__main__":
         for prop, value in properties.iteritems():
             cardParams = {
                 'card[properties][][name]': prop,
-                'card[properties][][value]': value
+                'card[properties][][value]': mapping.get(value, value)
             }
             mingle.updateCard(cardLocation, cardParams)
 
