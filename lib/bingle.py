@@ -1,6 +1,7 @@
 import pickle
 import requests
 import feedparser
+import json
 from datetime import datetime
 
 
@@ -73,6 +74,11 @@ class Bingle:
         response = requests.get('https://bugzilla.wikimedia.org/jsonrpc.cgi', params=payload)
         self.info("Number of comments found: %d" % len(response.json().get('result', {}).get('bugs', {}).get('%s' % bug_id).get('comments')))
         return response.json().get('result', {}).get('bugs', {}).get('%s' % bug_id)
+
+    def addBugComment(self, payload,  bug_id):
+        headers = {'content-type': 'application/json'}
+        response = requests.post('https://bugzilla.wikimedia.org/jsonrpc.cgi', data=json.dumps(payload), headers=headers) 
+        self.info("Posted comment %s to bug %s" % (payload.get('params', {})[0].get('comment'), bug_id))
 
     def setFeedUrl(self, feedUrl):
         self.feedUrl = self.getBugzillaFeedUrl(feedUrl)
