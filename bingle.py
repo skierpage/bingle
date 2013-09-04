@@ -121,12 +121,14 @@ if __name__ == "__main__":
             mingle.updateCard(cardLocation, cardParams)
             bingle.info(mingle.dumpRequest())
 
-       # post comment with mingle card it back to bugzilla bug
+        #post comment with mingle card it back to bugzilla bug
+        pos= cardLocation.rfind('/')
+        cardId = cardLocation[pos:-4]
         bugzilla_payload = {'jsonrpc': '1.1', 
                             'method': 'Bug.add_comment','id': 1, 
                             'params': [{'id': '%s' % bug.get('id'),'Bugzilla_login': config.get('auth_bugzilla', 'username'),
                             'Bugzilla_password': config.get('auth_bugzilla', 'password'),
-                            'comment': 'Prioritization and scheduling of this bug is tracked on Mingle card %s/%s' % (apiBaseUrl, cardLocation)}]}
+                            'comment': 'Prioritization and scheduling of this bug is tracked on Mingle card %s%s' % (apiBaseUrl, cardId)}]}
         bingle.addBugComment(bugzilla_payload, bug.get('id'))
 
     bingle.updatePickleTime()
