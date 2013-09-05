@@ -12,22 +12,25 @@ from lib.mingle import Mingle
 
 def createDictionaryFromPropertiesList(properties):
     return dict((key.strip(), value.strip()) for key, value in (prop.split(',')
-               for prop in properties.split(';') if prop.find(',') > -1))
+                                                                for prop in properties.split(';') if prop.find(',') > -1))
 
 
 def postComments(auth, apiBaseUrl, comments, mingle_id):
-	pos = mingle_id.rfind('/') + 1
-	mingle_id = mingle_id[pos:]
-	mingle_id = mingle_id.replace('.xml', '')
-	headers = {'content-type': 'application/x-www-form-urlencoded'}
-	url = '%s%s/%s/comments.xml' % (apiBaseUrl, 'cards', mingle_id)
-	comments = comments.get('comments')[1:]	#the first comment is already used in the summary of the mingle card.
-	for comment in comments:
-		payload = {'comment[content]': '%s\n#%s' % (comment.get('text'), mingle_id)}
-		response = requests.post(url, 
-								data=payload, 
-								auth=(auth.get('username'), auth.get('password')), 
-								headers=headers)
+    pos = mingle_id.rfind('/') + 1
+    mingle_id = mingle_id[pos:]
+    mingle_id = mingle_id.replace('.xml', '')
+    headers = {'content-type': 'application/x-www-form-urlencoded'}
+    url = '%s%s/%s/comments.xml' % (apiBaseUrl, 'cards', mingle_id)
+    comments = comments.get('comments')[
+        1:]  # the first comment is already used in the summary of the mingle card.
+    for comment in comments:
+        payload = {'comment[content]': '%s\n#%s' % (
+            comment.get('text'), mingle_id)}
+        response = requests.post(url,
+                                 data=payload,
+                                 auth=(auth.get(
+                                       'username'), auth.get('password')),
+                                 headers=headers)
 
 if __name__ == "__main__":
     parser = OptionParser()
@@ -68,8 +71,9 @@ if __name__ == "__main__":
 
     for bug in bingle.getBugEntries():
         bingle.info("Bug XML: %s" % bug)
-	# look for card
-        foundBugs = mingle.findCardByName(bugCard, bug.get('summary'), bug.get('id'))
+        # look for card
+        foundBugs = mingle.findCardByName(
+            bugCard, bug.get('summary'), bug.get('id'))
         bingle.info(mingle.dumpRequest())
         if len(foundBugs) > 0:
             continue
@@ -80,7 +84,7 @@ if __name__ == "__main__":
         comments = bingle.getBugComments(comment_payload, bug.get('id'))
         link = '<br><p>Full bug report at https://bugzilla.wikimedia.org/%s</p>' % bug.get(
             'id')
-        
+
         # set common mingle parameters
         cardParams = {
             'card[name]': '[Bug %s] %s' % (bug.get('id', '---'), bug.get('summary').encode('ascii', 'ignore')),
@@ -89,13 +93,13 @@ if __name__ == "__main__":
             'card[created_by]': auth['username'],
             'card[tags][]': tags  # is not supported by Mingle API currently
         }
-        
+
         cardLocation = mingle.addCard(cardParams)
         bingle.info(mingle.dumpRequest())
 
         postComments(auth, apiBaseUrl, comments, cardLocation)
 
-        #set custom mingle properties
+        # set custom mingle properties
         properties = {}
         for key, value in bugzillaProperties.iteritems():
             properties[value] = bug.get(key, '')
@@ -122,12 +126,13 @@ if __name__ == "__main__":
             mingle.updateCard(cardLocation, cardParams)
             bingle.info(mingle.dumpRequest())
 
-        #post comment with mingle card it back to bugzilla bug
-        pos= cardLocation.rfind('/')
+        # post comment with mingle card it back to bugzilla bug
+        pos = cardLocation.rfind('/')
         cardId = cardLocation[pos:-4]
-        bugzilla_payload = {'jsonrpc': '1.1', 
-                            'method': 'Bug.add_comment','id': 1, 
-                            'params': [{'id': '%s' % bug.get('id'),'Bugzilla_login': config.get('auth_bugzilla', 'username'),
+        bugzilla_payload = {'jsonrpc': '1.1',
+                            'method': 'Bug.add_comment', 'id': 1,
+                            'params': [{'id': '%s' % bug.get('id'), 
+                            'Bugzilla_login': config.get('auth_bugzilla', 'username'),
                             'Bugzilla_password': config.get('auth_bugzilla', 'password'),
                             'comment': 'Prioritization and scheduling of this bug is tracked on Mingle card %s%s' % (mingleUrlBase, cardId)}]}
         bingle.addBugComment(bugzilla_payload, bug.get('id'))
