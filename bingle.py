@@ -42,6 +42,7 @@ if __name__ == "__main__":
     debug = config.getboolean('debug', 'debug')
     picklePath = config.get('paths', 'picklePath')
     apiBaseUrl = config.get('urls', 'mingleApiBase')
+    mingleUrlBase = config.get('urls', 'mingleUrlBase')
     bugCard = config.get('mingle', 'bugCard')
     product = config.get('bugzilla', 'product').split(',')
     component = config.get('bugzilla', 'component').split(',')
@@ -128,7 +129,7 @@ if __name__ == "__main__":
                             'method': 'Bug.add_comment','id': 1, 
                             'params': [{'id': '%s' % bug.get('id'),'Bugzilla_login': config.get('auth_bugzilla', 'username'),
                             'Bugzilla_password': config.get('auth_bugzilla', 'password'),
-                            'comment': 'Prioritization and scheduling of this bug is tracked on Mingle card %s%s' % (apiBaseUrl, cardId)}]}
+                            'comment': 'Prioritization and scheduling of this bug is tracked on Mingle card %s%s' % (mingleUrlBase, cardId)}]}
         bingle.addBugComment(bugzilla_payload, bug.get('id'))
 
     bingle.updatePickleTime()
