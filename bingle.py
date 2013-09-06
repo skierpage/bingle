@@ -109,8 +109,8 @@ if __name__ == "__main__":
 
         for prop, value in properties.iteritems():
             cardParams = {
-                'card[properties][][name]': prop,
-                'card[properties][][value]': mapping.get(value, value)
+                'card[properties][][name]': prop.strip('\'').strip('"'),
+                'card[properties][][value]': mapping.get(value, value).strip('\'').strip('"')
             }
             mingle.updateCard(cardLocation, cardParams)
 
