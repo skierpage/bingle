@@ -2,6 +2,10 @@
 username=user
 password=pass
 
+[auth_bugzilla]
+username=user
+password=pass
+
 [debug]
 debug=False
 
@@ -12,6 +16,7 @@ picklePath=bingle.pickle
 [urls]
 # note the trailing slash is important
 mingleApiBase=https://mingle.corp.wikimedia.org/api/v2/projects/mobile/
+mingleUrlBase=https://mingle.corp.wikimedia.org/projects/mobile/
 bugzillaFeed=https://bugzilla.wikimedia.org/buglist.cgi?bug_status=NEW&component=MobileFrontend&f1=creation_ts&list_id=195375&o1=greaterthan&product=MediaWiki%20extensions&query_format=advanced&resolution=---&resolution=LATER&resolution=DUPLICATE&title=Bug%20List&ctype=atom
 
 [mingle]

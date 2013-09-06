@@ -1,11 +1,14 @@
 import pickle
+import requests
 import feedparser
+import json
 from datetime import datetime
 
 
 class Bingle:
 
-    def __init__(self, picklePath='bingle.pickle', debug=False, feedUrl=None):
+    def __init__(self, payload, picklePath='bingle.pickle', debug=False, feedUrl=None):
+        self.payload = payload
         self.setDebug(debug)
         self.setPicklePath(picklePath)
         if feedUrl is not None:
@@ -59,8 +62,23 @@ class Bingle:
 
     def getFeedEntries(self):
         feed = feedparser.parse(self.feedUrl)
-        self.info("Feed length: %d" % len(feed.entries))
-        return feed.entries
+        self.info("Number of bugs found: %d" % len(feed.entries))
+        return feed
+
+    def getBugEntries(self):
+        response = requests.get('https://bugzilla.wikimedia.org/jsonrpc.cgi', params=self.payload) 
+        self.info("Number of bugs found: %d" % len(response.json().get('result',{}).get('bugs')))
+        return response.json().get('result',{}).get('bugs', {})
+
+    def getBugComments(self, payload, bug_id):
+        response = requests.get('https://bugzilla.wikimedia.org/jsonrpc.cgi', params=payload)
+        self.info("Number of comments found: %d" % len(response.json().get('result', {}).get('bugs', {}).get('%s' % bug_id).get('comments')))
+        return response.json().get('result', {}).get('bugs', {}).get('%s' % bug_id)
+
+    def addBugComment(self, payload,  bug_id):
+        headers = {'content-type': 'application/json'}
+        response = requests.post('https://bugzilla.wikimedia.org/jsonrpc.cgi', data=json.dumps(payload), headers=headers) 
+        self.info("Posted comment %s to bug %s" % (payload.get('params', {})[0].get('comment'), bug_id))
 
     def setFeedUrl(self, feedUrl):
         self.feedUrl = self.getBugzillaFeedUrl(feedUrl)

@@ -32,11 +32,12 @@ class Mingle:
         r.raise_for_status()
         return r.json()
 
-    def findCardByName(self, cardType, name):
+    def findCardByName(self, cardType, name, bugId):
         # Mingle removes extraneous spaces mid-string; do the same here
+        print name
         name = ' '.join(name.split())
-        mql = 'SELECT number WHERE Type=\'%s\' AND name=\'%s\'' % (
-            cardType, name.replace("'", "\\'"))
+        mql = 'SELECT number WHERE Type=\'%s\' AND name=\'[Bug %s] %s\'' % (
+            cardType, bugId, name.replace("'", "\\'"))
         return self.executeMql(mql)
 
     def addCard(self, cardParams):
@@ -99,7 +100,7 @@ class MingleRequest:
         return r
 
     def __makePostRequest(self, reqUrl):
-        r = requests.post(reqUrl, auth=self.auth, params=self.payload)
+        r = requests.post(reqUrl, auth=self.auth, data=self.payload)
         return r
 
     def __str__(self):
