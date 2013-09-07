@@ -67,20 +67,20 @@ class Bingle:
 
     def getBugEntries(self, payload):
         response = requests.get('https://bugzilla.wikimedia.org/jsonrpc.cgi', params=payload)
-		response.raise_for_status()
+        response.raise_for_status()
         self.info("Number of bugs found: %d" % len(response.json().get('result',{}).get('bugs')))
         return response.json().get('result',{}).get('bugs', {})
 
     def getBugComments(self, payload, bug_id):
         response = requests.get('https://bugzilla.wikimedia.org/jsonrpc.cgi', params=payload)
-		response.raise_for_status()
+        response.raise_for_status()
         self.info("Number of comments found: %d" % len(response.json().get('result', {}).get('bugs', {}).get('%s' % bug_id).get('comments')))
         return response.json().get('result', {}).get('bugs', {}).get('%s' % bug_id)
 
     def addBugComment(self, payload,  bug_id):
         headers = {'content-type': 'application/json'}
         response = requests.post('https://bugzilla.wikimedia.org/jsonrpc.cgi', data=json.dumps(payload), headers=headers) 
-		response.raise_for_status()
+        response.raise_for_status()
         self.info("Posted comment %s to bug %s" % (payload.get('params', {})[0].get('comment'), bug_id))
 
     def setFeedUrl(self, feedUrl):
