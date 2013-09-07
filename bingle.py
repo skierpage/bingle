@@ -135,7 +135,7 @@ if __name__ == "__main__":
                             'params': [{'id': '%s' % bug.get('id'), 
                             'Bugzilla_login': config.get('auth_bugzilla', 'username'),
                             'Bugzilla_password': config.get('auth_bugzilla', 'password'),
-                            'comment': 'Prioritization and scheduling of this bug is tracked on Mingle card %s%s' % (mingleUrlBase, cardId)}]}
+                            'comment': 'Prioritization and scheduling of this bug is tracked on Mingle card %scards%s' % (mingleUrlBase, cardId)}]}
         bingle.addBugComment(bugzilla_payload, bug.get('id'))
 
     bingle.updatePickleTime()
