@@ -8,7 +8,6 @@ from optparse import OptionParser
 
 from lib.bingle import Bingle
 from lib.mingle import Mingle
-from bugzillaSummaryParser import BugzillaSummaryTableParser
 
 
 def createDictionaryFromPropertiesList(properties):
@@ -57,20 +56,21 @@ if __name__ == "__main__":
         config.get('mingle', 'properties'))
     mapping = createDictionaryFromPropertiesList(
         config.get('mapping', 'properties'))
-    payload = {'method': 'Bug.search', 'params': json.dumps([{
-        'product': product,
-        'component': component,
-        'status': ['UNCONFIRMED', 'NEW'],
-        'creation_time': '2012-08-01 00:00 UTC',
-    }])}
 
-    bingle = Bingle(payload, debug=debug, picklePath=picklePath, feedUrl=config.get(
+    bingle = Bingle(debug=debug, picklePath=picklePath, feedUrl=config.get(
         'urls', 'bugzillaFeed'))
 
     # prepare Mingle instance
     mingle = Mingle(auth, apiBaseUrl)
 
-    for bug in bingle.getBugEntries():
+    fromTime = bingle.getTimeFromPickle()
+    bugzillaPayload = {'method': 'Bug.search', 'params': json.dumps([{
+        'product': product,
+        'component': component,
+        'status': ['UNCONFIRMED', 'NEW'],
+        'creation_time': fromTime,
+    }])}
+    for bug in bingle.getBugEntries(bugzillaPayload):
         bingle.info("Bug XML: %s" % bug)
         # look for card
         foundBugs = mingle.findCardByName(

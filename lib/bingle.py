@@ -7,8 +7,7 @@ from datetime import datetime
 
 class Bingle:
 
-    def __init__(self, payload, picklePath='bingle.pickle', debug=False, feedUrl=None):
-        self.payload = payload
+    def __init__(self, picklePath='bingle.pickle', debug=False, feedUrl=None):
         self.setDebug(debug)
         self.setPicklePath(picklePath)
         if feedUrl is not None:
@@ -65,8 +64,8 @@ class Bingle:
         self.info("Number of bugs found: %d" % len(feed.entries))
         return feed
 
-    def getBugEntries(self):
-        response = requests.get('https://bugzilla.wikimedia.org/jsonrpc.cgi', params=self.payload) 
+    def getBugEntries(self, payload):
+        response = requests.get('https://bugzilla.wikimedia.org/jsonrpc.cgi', params=payload) 
         self.info("Number of bugs found: %d" % len(response.json().get('result',{}).get('bugs')))
         return response.json().get('result',{}).get('bugs', {})
 
