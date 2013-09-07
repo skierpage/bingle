@@ -28,7 +28,7 @@ class Bingle:
             print "[INFO] %s" % out
 
     def getBugzillaFeedUrl(self, feedUrl):
-        now = datetime.now().strftime('%Y-%m-%d %H:%M')
+        now = datetime.now().strftime('%Y-%m-%d %H:%M %Z')
         fromTime = self.getTimeFromPickle()
         if fromTime is not None:
             feedUrl = feedUrl + '&v1=%s' % fromTime
