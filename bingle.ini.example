@@ -32,3 +32,11 @@ properties=status,In analysis;Iteration, (Current iteration)
 tags=bingle
 # If you have a card property to store the bugzilla bug ID, enter the name of the property here - otherwise, leave it blank.
 bugIdFieldName=Bug ID
+
+[bugzilla]
+properties=
+product=MediaWiki extensions
+component=MobileFrontend
+
+[mapping]
+properties=
