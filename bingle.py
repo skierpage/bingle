@@ -49,7 +49,6 @@ if __name__ == "__main__":
     bugCard = config.get('mingle', 'bugCard')
     product = config.get('bugzilla', 'product').split(',')
     component = config.get('bugzilla', 'component').split(',')
-    tags = config.get('mingle', 'tags')
     bugzillaProperties = createDictionaryFromPropertiesList(
         config.get('bugzilla', 'properties'))
     mingleProperties = createDictionaryFromPropertiesList(
@@ -57,8 +56,7 @@ if __name__ == "__main__":
     mapping = createDictionaryFromPropertiesList(
         config.get('mapping', 'properties'))
 
-    bingle = Bingle(debug=debug, picklePath=picklePath, feedUrl=config.get(
-        'urls', 'bugzillaFeed'))
+    bingle = Bingle(debug=debug, picklePath=picklePath)
 
     # prepare Mingle instance
     mingle = Mingle(auth, apiBaseUrl)
@@ -92,7 +90,6 @@ if __name__ == "__main__":
             'card[card_type_name]': bugCard,
             'card[description]': comments.get('comments')[0].get('text') + link,
             'card[created_by]': auth['username'],
-            'card[tags][]': tags  # is not supported by Mingle API currently
         }
 
         cardLocation = mingle.addCard(cardParams)
