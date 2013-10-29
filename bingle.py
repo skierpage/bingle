@@ -66,7 +66,7 @@ if __name__ == "__main__":
         'product': product,
         'component': component,
         'status': ['UNCONFIRMED', 'NEW'],
-        'creation_time': fromTime,
+        'last_change_time': fromTime,
     }])}
     for bug in bingle.getBugEntries(bugzillaPayload):
         bingle.info("Bug XML: %s" % bug)
