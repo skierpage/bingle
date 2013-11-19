@@ -143,8 +143,9 @@ if __name__ == "__main__":
         # post comment with mingle card it back to bugzilla bug
         pos = cardLocation.rfind('/')
         cardId = cardLocation[pos:-4]
-        comment = 'Prioritization and scheduling of this bug is tracked on ' \
-            'Mingle card %scards%s' % (mingleUrlBase, cardId)
+        comment = 'The WMF core features team tracks this bug on ' \
+            'Mingle card %scards%s, but people from the community are welcome ' \
+            'to contribute here and in Gerrit.' % (mingleUrlBase, cardId)
         bugzilla_payload = {
             'jsonrpc': '1.1',
             'method': 'Bug.add_comment', 'id': 1,

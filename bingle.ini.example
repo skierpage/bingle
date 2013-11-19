@@ -1,3 +1,6 @@
+# Settings for Flow project. Set your Flow and Bugzilla usernames and
+# passwords, and save as bingle.ini
+
 [auth]
 username=user
 password=pass
@@ -15,18 +18,18 @@ picklePath=bingle.pickle
 
 [urls]
 # note the trailing slash is important
-mingleApiBase=https://mingle.corp.wikimedia.org/api/v2/projects/mobile/
-mingleUrlBase=https://mingle.corp.wikimedia.org/projects/mobile/
+mingleApiBase=https://mingle.corp.wikimedia.org/api/v2/projects/flow/
+mingleUrlBase=https://mingle.corp.wikimedia.org/projects/flow/
 
 [mingle]
 #look out for capitalization!!!
-#these are default props for the mobile mingle project
+#these are default props for the Flow mingle project
 bugCard=bug
 
 # A list of the properties to set on generated Mingle cards
 # The list is in the format of:
 #   <property name>,<property value>;<property 2 name>,<property 2 value>, etc
-properties=status,In analysis;Iteration, (Current iteration)
+properties=status,Ready for Analysis;Iteration,(Current iteration)
 
 # If you have a card property to store the bugzilla bug ID, enter the name of the property here - otherwise, leave it blank.
 bugIdFieldName=Bug ID
@@ -34,7 +37,7 @@ bugIdFieldName=Bug ID
 [bugzilla]
 properties=
 product=MediaWiki extensions
-component=MobileFrontend
+component=Flow
 
 [mapping]
 properties=
