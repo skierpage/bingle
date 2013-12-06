@@ -22,3 +22,7 @@ useLatestBoard=False
 targetListName=To Do
 ; first time you run bugello, you should be given a URL from which to fetch your pin
 pin=
+
+[bugzilla]
+product=Wikipedia App,Commons App
+component=
