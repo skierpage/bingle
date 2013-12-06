@@ -32,12 +32,19 @@ class Mingle:
         r.raise_for_status()
         return r.json()
 
-    def findCardByName(self, cardType, name, bugId):
-        # Mingle removes extraneous spaces mid-string; do the same here
-        print name
-        name = ' '.join(name.split())
-        mql = 'SELECT number WHERE Type=\'%s\' AND name=\'[Bug %s] %s\'' % (
-            cardType, bugId, name.replace("'", "\\'"))
+    def findCardByNameOrBugId(self, cardType, name, bugId, bugIdField):
+        if len(bugIdField):
+            mql = 'SELECT number WHERE Type=\'%s\' AND \'%s\'= \'%s\'' % (
+                    cardType, bugIdField, bugId )
+        else:
+            # Look for mingle card with matching name.
+            # TODO Define a getMingleBugCardName function for '[Bug NNNN] name',
+            # also in bingle.py
+            # Mingle removes extraneous spaces mid-string; do the same here
+            print name
+            name = ' '.join(name.split())
+            mql = 'SELECT number WHERE Type=\'%s\' AND name=\'[Bug %s] %s\'' % (
+                cardType, bugId, name.replace("'", "\\'"))
         return self.executeMql(mql)
 
     def addCard(self, cardParams):

@@ -47,6 +47,7 @@ if __name__ == "__main__":
     apiBaseUrl = config.get('urls', 'mingleApiBase')
     mingleUrlBase = config.get('urls', 'mingleUrlBase')
     bugCard = config.get('mingle', 'bugCard')
+    bugIdFieldName = config.get('mingle', 'bugIdFieldName')
     product = config.get('bugzilla', 'product').split(',')
     component = config.get('bugzilla', 'component').split(',')
     bugzillaProperties = createDictionaryFromPropertiesList(
@@ -70,12 +71,17 @@ if __name__ == "__main__":
     }])}
     for bug in bingle.getBugEntries(bugzillaPayload):
         bingle.info("Bug XML: %s" % bug)
-        # look for card
-        foundBugs = mingle.findCardByName(
-            bugCard, bug.get('summary'), bug.get('id'))
+        # see if there's a mingle card matching this bug
+        foundBugs = mingle.findCardByNameOrBugId(
+            bugCard, bug.get('summary'), bug.get('id'), bugIdFieldName)
         bingle.info(mingle.dumpRequest())
         if len(foundBugs) > 0:
+            bingle.info('Existing card(s) %s match bug %s, so skip it.' % (
+                ','.join( [ str(m['Number']) for m in foundBugs ] ),
+                bug.get('id') ) )
             continue
+        else:
+            bingle.info('Did not find card matching bug %s, so add it.' % (bug.get('id')) )
 
         # retrieve bug comments
         comment_payload = {'method': 'Bug.comments', 'params': json.dumps(
@@ -86,6 +92,8 @@ if __name__ == "__main__":
 
         # set common mingle parameters
         cardParams = {
+            # TODO Define a getMingleBugCardName function for '[Bug NNNN] name',
+            # also in mingle.py.
             'card[name]': '[Bug %s] %s' % (bug.get('id', '---'), bug.get('summary').encode('ascii', 'ignore')),
             'card[card_type_name]': bugCard,
             'card[description]': comments.get('comments')[0].get('text') + link,
@@ -114,7 +122,6 @@ if __name__ == "__main__":
         bingle.info(mingle.dumpRequest())
 
         # include bug ID if configured as a property
-        bugIdFieldName = config.get('mingle', 'bugIdFieldName')
         if len(bugIdFieldName):
             bugId = bug.get('id')
             cardParams = {
