@@ -62,8 +62,8 @@ if __name__ == "__main__":
     debug = config.getboolean('debug', 'debug')
     appKey = config.get('trello', 'appKey')
     picklePath = config.get('paths', 'picklePath')
-	product = config.get('bugzilla', 'product').split(',')
-	component = config.get('bugzilla', 'component').split(',')
+    product = config.get('bugzilla', 'product').split(',')
+    component = config.get('bugzilla', 'component').split(',')
 
     # check for authorization pin - this seems easier than dealing with oAuth
     # note never expiring pin; maybe make this configurable.
@@ -107,16 +107,16 @@ if __name__ == "__main__":
         print "Could not find list: %s" % tListName
         sys.exit(1)
 
-	bingle = Bingle(debug=debug, picklePath=picklePath)
-	fromTime = bingle.getTimeFromPickle()
-	bugzillaPayload = {'method': 'Bug.search', 'params': json.dumps([{
-		'product': product,
-		'component': component,
-		'status': ['UNCONFIRMED', 'NEW'],
-		'last_change_time': fromTime
-	}])}
+    bingle = Bingle(debug=debug, picklePath=picklePath)
+    fromTime = bingle.getTimeFromPickle()
+    bugzillaPayload = {'method': 'Bug.search', 'params': json.dumps([{
+        'product': product,
+        'component': component,
+        'status': ['UNCONFIRMED', 'NEW'],
+        'last_change_time': fromTime
+    }])}
 
-	for entry in bingle.getBugEntries(bugzillaPayload):
+    for entry in bingle.getBugEntries(bugzillaPayload):
         # 1 look for existence of the card
         cardTitle = entry.get('summary').ecode('UTF-8', 'ignore')
         cardQueryParams = {
@@ -145,7 +145,7 @@ if __name__ == "__main__":
                 print "Card %s already exists." % card['name']
             continue
 
-		bugUrl = 'https://bugzilla.wikimedia.org/%s' % entry.get('id')
+        bugUrl = 'https://bugzilla.wikimedia.org/%s' % entry.get('id')
         # add card to current board
         newCardParams = {
             'name': cardTitle,
