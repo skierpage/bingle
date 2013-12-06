@@ -4,6 +4,7 @@ import ConfigParser
 import sys
 import requests
 import re
+import json
 from optparse import OptionParser
 from lib.bingle import Bingle
 
