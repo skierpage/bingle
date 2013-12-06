@@ -30,14 +30,14 @@ def getBoardId(baseParams, boardBaseName, debug=False, getLatest=False):
 
 def getLatestBoardId(boardsJson, debug=False):
     # sprint names are like 'Mobile App - Sprint 9'; we want to find the latest
-    sprintNumRegex = re.compile('\d+$')
+    sprintNumRegex = re.compile('sprint (\d+)', re.I)
     boards = []
     for board in boardsJson:
         sprintNum = sprintNumRegex.search(board['name'])
         if sprintNum:
             # do we really need name? may come in handy
             boards.append(
-                (int(sprintNum.group(0)),
+                (int(sprintNum.group(1)),
                     board['id'],
                     board['name'])
             )
