@@ -149,7 +149,7 @@ if __name__ == "__main__":
         # add card to current board
         newCardParams = {
             'name': cardTitle,
-            'desc': bugUrl
+            'desc': bugUrl,
             'idList': tListId,
             'due': None
         }
