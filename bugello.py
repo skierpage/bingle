@@ -112,7 +112,7 @@ if __name__ == "__main__":
     fromTime = bingle.getTimeFromPickle()
     params = {
         'product': product,
-        'status': ['UNCONFIRMED', 'NEW']
+        'status': ['UNCONFIRMED', 'NEW'],
         'last_change_time': fromTime
     }
     if len(component) > 0:
