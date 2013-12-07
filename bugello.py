@@ -115,7 +115,7 @@ if __name__ == "__main__":
         'status': ['UNCONFIRMED', 'NEW'],
         'last_change_time': fromTime
     }
-    if len(component) > 0:
+    if len(component[0]) > 1:
         params['component'] = component
 
     bugzillaPayload = {
@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
     for entry in bingle.getBugEntries(bugzillaPayload):
         # 1 look for existence of the card
-        cardTitle = entry.get('summary').ecode('UTF-8', 'ignore')
+        cardTitle = entry.get('summary').encode('UTF-8', 'ignore')
         cardQueryParams = {
             'query': cardTitle,
             'card_fields': 'name',
