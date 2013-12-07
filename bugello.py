@@ -110,12 +110,18 @@ if __name__ == "__main__":
 
     bingle = Bingle(debug=debug, picklePath=picklePath)
     fromTime = bingle.getTimeFromPickle()
-    bugzillaPayload = {'method': 'Bug.search', 'params': json.dumps([{
+    params = {
         'product': product,
-        'component': component,
-        'status': ['UNCONFIRMED', 'NEW'],
+        'status': ['UNCONFIRMED', 'NEW']
         'last_change_time': fromTime
-    }])}
+    }
+    if len(component) > 0:
+        params['component'] = component
+
+    bugzillaPayload = {
+        'method': 'Bug.search',
+        'params': json.dumps([params])
+    }
 
     for entry in bingle.getBugEntries(bugzillaPayload):
         # 1 look for existence of the card
