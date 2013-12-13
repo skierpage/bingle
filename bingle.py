@@ -72,12 +72,14 @@ if __name__ == "__main__":
     for bug in bingle.getBugEntries(bugzillaPayload):
         bingle.info("Bug XML: %s" % bug)
         # see if there's a mingle card matching this bug
-        foundBugs = mingle.findCardByNameOrBugId(
-            bugCard, bug.get('summary'), bug.get('id'), bugIdFieldName)
+		if len(bugIdFieldName) > 0:
+			foundBug = mingle.findCardNumByBugId(bugCard, bug.get('id'), bugIdFieldName)
+		else:
+			foundBug = mingle.findCardNumByBugName(bugCard, bug.get('id'), bug.get('summary'))
         bingle.info(mingle.dumpRequest())
-        if len(foundBugs) > 0:
+        if len(foundBug) > 0:
             bingle.info('Existing card(s) %s match bug %s, so skip it.' % (
-                ','.join( [ str(m['Number']) for m in foundBugs ] ),
+                ','.join( [ str(m['Number']) for m in foundBug ] ),
                 bug.get('id') ) )
             continue
         else:
@@ -90,11 +92,10 @@ if __name__ == "__main__":
         link = '<br><p>Full bug report at https://bugzilla.wikimedia.org/%s</p>' % bug.get(
             'id')
 
+		bugCardName = mingle.generateMingleBugCardName(bug.get('id','---'), bug.get('summary').encode('ascii', 'ignore'))
         # set common mingle parameters
         cardParams = {
-            # TODO Define a getMingleBugCardName function for '[Bug NNNN] name',
-            # also in mingle.py.
-            'card[name]': '[Bug %s] %s' % (bug.get('id', '---'), bug.get('summary').encode('ascii', 'ignore')),
+            'card[name]': bugCardName,
             'card[card_type_name]': bugCard,
             'card[description]': comments.get('comments')[0].get('text') + link,
             'card[created_by]': auth['username'],

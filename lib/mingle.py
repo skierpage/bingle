@@ -16,7 +16,7 @@ class Mingle:
     def setAuth(self, auth):
         if not isinstance(auth, dict):
             raise TypeError('Auth params must be passed as a dictionary.')
-        if not (auth.has_key('username') or auth.has_key('password')):
+        if not ('username' in auth or 'password' in auth):
             raise NameError(
                 '\'username\' and \'password\' dictionary keys not found.')
         self.auth = (auth['username'], auth['password'])
@@ -32,19 +32,23 @@ class Mingle:
         r.raise_for_status()
         return r.json()
 
-    def findCardByNameOrBugId(self, cardType, name, bugId, bugIdField):
-        if len(bugIdField):
-            mql = 'SELECT number WHERE Type=\'%s\' AND \'%s\'= \'%s\'' % (
-                    cardType, bugIdField, bugId )
-        else:
-            # Look for mingle card with matching name.
-            # TODO Define a getMingleBugCardName function for '[Bug NNNN] name',
-            # also in bingle.py
-            # Mingle removes extraneous spaces mid-string; do the same here
-            print name
-            name = ' '.join(name.split())
-            mql = 'SELECT number WHERE Type=\'%s\' AND name=\'[Bug %s] %s\'' % (
-                cardType, bugId, name.replace("'", "\\'"))
+    def generateMingleBugCardName(self, bugId, bugName):
+        # Mingle removes extraneous spaces mid-string; do the same here
+        bugName = ' '.join(bugName.split())
+        return '[Bug %s] %s' % (bugId, bugName.replace("'", "\\"))
+
+    def findCardNumByBugName(self, cardType, bugId, bugName):
+        bugCardName = self.generateMingleBugCardName(bugId, bugName)
+        return self.findCardNumByName(cardType, bugCardName)
+
+    def findCardNumByName(self, cardType, cardName):
+        # Look for mingle card with matching name.
+        mql = 'SELECT number WHERE Type=\'%s\' AND name=\'%s\'' % (cardType, cardName)
+        return self.executeMql(mql)
+
+    def findCardNumByBugId(self, cardType, bugId, bugIdField):
+        mql = 'SELECT number WHERE Type=\'%s\' AND \'%s\'= \'%s\'' \
+            % (cardType, bugIdField, bugId)
         return self.executeMql(mql)
 
     def addCard(self, cardParams):
@@ -111,4 +115,5 @@ class MingleRequest:
         return r
 
     def __str__(self):
-        return "MingleRequest obj:\n%s: %s\n%s: %s" % ('reqUrl', self.reqUrl, 'payload', str(self.payload))
+        return "MingleRequest obj:\n%s: %s\n%s: %s" \
+            % ('reqUrl', self.reqUrl, 'payload', str(self.payload))
