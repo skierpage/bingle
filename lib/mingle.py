@@ -1,4 +1,5 @@
 import requests
+import xml.etree.ElementTree as ET
 from urlparse import urljoin
 
 
@@ -74,6 +75,33 @@ class Mingle:
 
     def dumpRequest(self):
         return str(self.getMingleRequestObject())
+
+
+class MingleCard:
+    cardXml = ''
+    cardXmlTree = None
+
+    def __init__(self, cardXml):
+        self.cardXml = cardXml
+
+    def getElementTree(self):
+        if not self.cardXmlTree:
+            self.createElementTree()
+        return self.cardXmlTree
+
+    def createElementTree(self):
+        self.cardXmlTree = ET.fromstring(self.cardXml)
+
+    def getStatus(self, statusPropName):
+        status = ''
+        for props in self.getElementTree().findall('./properties/property'):
+            if props.find('name').text == statusPropName:
+                status = props.find('value').text
+                break
+        return status
+
+    def __str__(self):
+        return self.cardXml
 
 
 class MingleRequest:
