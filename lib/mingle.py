@@ -44,7 +44,8 @@ class Mingle:
 
     def findCardNumByName(self, cardType, cardName):
         # Look for mingle card with matching name.
-        mql = 'SELECT number WHERE Type=\'%s\' AND name=\'%s\'' % (cardType, cardName)
+        mql = 'SELECT number WHERE Type=\'%s\' AND name=\'%s\'' \
+            % (cardType, cardName)
         return self.executeMql(mql)
 
     def findCardNumByBugId(self, cardType, bugId, bugIdField):
