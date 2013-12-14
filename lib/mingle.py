@@ -101,7 +101,7 @@ class MingleCard:
         self.cardXmlTree = ET.fromstring(self.cardXml)
 
     def getStatus(self, statusPropName):
-        status = ''
+        status = None 
         for props in self.getElementTree().findall('./properties/property'):
             if props.find('name').text == statusPropName:
                 status = props.find('value').text
