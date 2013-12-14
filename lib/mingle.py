@@ -53,6 +53,13 @@ class Mingle:
             % (cardType, bugIdField, bugId)
         return self.executeMql(mql)
 
+    def getCardById(self, cardId):
+        reqUrl = self.getFullApiReqUrl('cards/%s.xml' % cardId)
+        self.mrequest = MingleRequest(reqUrl=reqUrl, auth=self.auth)
+        r = self.mrequest.makeRequest()
+        r.raise_for_status()
+        return MingleCard(r.text)
+
     def addCard(self, cardParams):
         reqUrl = self.getFullApiReqUrl('cards.xml')
         self.mrequest = MingleRequest(
