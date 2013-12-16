@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser.add_option("-c", "--config", dest="config",
                       help="Path to bingle config file", default="bingle.ini")
     parser.add_option("-p", "--pretend", action="store_true", dest="pretend",
-                        default=False, help="Run in 'pretend' mode")
+                      default=False, help="Run in 'pretend' mode")
     (options, args) = parser.parse_args()
 
     config = ConfigParser.ConfigParser()
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     bzSearchParams = {
         'product': product,
         'component': component,
-        'status': ['RESOLVED'], # make configurable
+        'status': ['RESOLVED'],  # make configurable
     }
     if fromTime:
         bzSearchParams['last_change_time'] = fromTime
@@ -60,8 +60,8 @@ if __name__ == "__main__":
     # fetch matching bugs
     bugs = bingle.getBugEntries(bugzillaPayload)
     bingle.info('Number of bugs: %s' % len(bugs))
-    counter=0
-    cardsToUpdate=[]
+    counter = 0
+    cardsToUpdate = []
     for bug in bugs:
         # see if there's a mingle card matching this bug
         # TODO: refactor this; it's repeated below
@@ -73,17 +73,22 @@ if __name__ == "__main__":
                 bugCard, bug.get('id'), bug.get('summary'))
         bingle.info(mingle.dumpRequest())
         if len(foundBug) < 1:
-            continue # eh... we probably want to do something else here
+            # eh... we probably want to do something else here
+            continue
         cardId = foundBug[0]['Number']
         # figure out the card's status
         # TODO: make 'status' field configurable
         status = mingle.getCardById(cardId).getStatus('Status')
         # TODO: make this list of statuses configurable
-        if status not in ['In Development', 'Awaiting Final Code Review', 'Ready for Signoff', 'Accepted']:
+        if status not in ['In Development',
+                          'Awaiting Final Code Review',
+                          'Ready for Signoff',
+                          'Accepted']:
             counter += 1
             cardsToUpdate.append(cardId)
             if not pretend:
-                # update the card to 'ready for signoff' and make sure it's in this iteration
+                # update the card to 'ready for signoff'
+                # and make sure it's in this iteration
                 cardParams = {
                     'card[properties][][name]': 'Status',
                     'card[properties][][value]': 'Ready for Signoff'
