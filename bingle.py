@@ -32,6 +32,7 @@ def postComments(auth, apiBaseUrl, comments, mingle_id):
                                        'username'), auth.get('password')),
                                  headers=headers)
 
+
 if __name__ == "__main__":
     parser = OptionParser()
     parser.add_option("-c", "--config", dest="config",
@@ -125,7 +126,7 @@ if __name__ == "__main__":
                 'card[properties][][name]': propName,
                 'card[properties][][value]': propValue
             }
-            mingle.updateCard(cardLocation, cardParams)
+            mingle.updateCardByLocation(cardLocation, cardParams)
 
         bingle.info(mingle.dumpRequest())
 
@@ -136,7 +137,7 @@ if __name__ == "__main__":
                 'card[properties][][name]': bugIdFieldName,
                 'card[properties][][value]': bugId,
             }
-            mingle.updateCard(cardLocation, cardParams)
+            mingle.updateCardByLocation(cardLocation, cardParams)
             bingle.info(mingle.dumpRequest())
 
         # post comment with mingle card it back to bugzilla bug

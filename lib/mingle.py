@@ -66,10 +66,14 @@ class Mingle:
             reqUrl=reqUrl, payload=cardParams, auth=self.auth)
         r = self.mrequest.makeRequest('post')
         r.raise_for_status()
+        # this should just return the card num, not location
         return r.headers['location']
 
-    def updateCard(self, location, cardParams):
-        # should use card num not full API URL
+    def updateCard(self, cardNum, cardParams):
+        reqUrl = self.getFullApiReqUrl('cards/%s.xml' % cardNum)
+        self.updateCardByLocation(reqUrl, cardParams)
+
+    def updateCardByLocation(self, location, cardParams):
         self.mrequest = MingleRequest(
             reqUrl=location, payload=cardParams, auth=self.auth)
         r = self.mrequest.makeRequest('put')
