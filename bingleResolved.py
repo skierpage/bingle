@@ -16,6 +16,8 @@ if __name__ == "__main__":
     parser = OptionParser()
     parser.add_option("-c", "--config", dest="config",
                       help="Path to bingle config file", default="bingle.ini")
+    parser.add_option("-p", "--pretend", action="store_true", dest="pretend",
+                        default=False, help="Run in 'pretend' mode")
     (options, args) = parser.parse_args()
 
     config = ConfigParser.ConfigParser()
@@ -58,6 +60,8 @@ if __name__ == "__main__":
     # fetch matching bugs
     bugs = bingle.getBugEntries(bugzillaPayload)
     bingle.info('Number of bugs: %s' % len(bugs))
+    counter=0
+    cardsToUpdate=[]
     for bug in bugs:
         # see if there's a mingle card matching this bug
         # TODO: refactor this; it's repeated below
@@ -76,15 +80,24 @@ if __name__ == "__main__":
         status = mingle.getCardById(cardId).getStatus('Status')
         # TODO: make this list of statuses configurable
         if status not in ['In Development', 'Awaiting Final Code Review', 'Ready for Signoff', 'Accepted']:
-            # update the card to 'ready for signoff' and make sure it's in this iteration
-            cardParams = {
-                'card[properties][][name]': 'Status',
-                'card[properties][][value]': 'Ready for Signoff'
-            }
-            #mingle.updateCard(cardId, cardParams)
-            cardParams = {
-                'card[properties][][name]': 'Iteration',
-                'card[properties][][value]': '(Current iteration)'
-            }
-            #mingle.updateCard(cardId, cardParams)
-            bingle.info('To update: %s' % cardId)
+            counter += 1
+            cardsToUpdate.append(cardId)
+            if not pretend:
+                # update the card to 'ready for signoff' and make sure it's in this iteration
+                cardParams = {
+                    'card[properties][][name]': 'Status',
+                    'card[properties][][value]': 'Ready for Signoff'
+                }
+                mingle.updateCard(cardId, cardParams)
+                cardParams = {
+                    'card[properties][][name]': 'Iteration',
+                    'card[properties][][value]': '(Current iteration)'
+                }
+                mingle.updateCard(cardId, cardParams)
+    if not pretend:
+        # update pickle
+        bingle.updatePickleTime()
+        bingle.info('Bug cards updated: %s' % counter)
+    else:
+        print "Mingle card IDs to update:"
+        print cardsToUpdate
