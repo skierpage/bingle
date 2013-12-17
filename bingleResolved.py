@@ -40,6 +40,7 @@ if __name__ == "__main__":
         config.get('mapping', 'properties'))
 
     bingle = Bingle(debug=debug, picklePath=picklePath)
+    bingle.info("Pretend mode: %s" % options.pretend)
 
     # prepare Mingle instance
     mingle = Mingle(auth, apiBaseUrl)
@@ -85,8 +86,9 @@ if __name__ == "__main__":
                           'Ready for Signoff',
                           'Accepted']:
             counter += 1
-            cardsToUpdate.append(cardId)
-            if not pretend:
+            cardToUpdate = (cardId, bug.get('id'))
+            cardsToUpdate.append(cardToUpdate)
+            if not options.pretend:
                 # update the card to 'ready for signoff'
                 # and make sure it's in this iteration
                 cardParams = {
@@ -99,10 +101,10 @@ if __name__ == "__main__":
                     'card[properties][][value]': '(Current iteration)'
                 }
                 mingle.updateCard(cardId, cardParams)
-    if not pretend:
+    if not options.pretend:
         # update pickle
         bingle.updatePickleTime()
-        bingle.info('Bug cards updated: %s' % counter)
-    else:
-        print "Mingle card IDs to update:"
-        print cardsToUpdate
+    bingle.info('Number of bug cards updated: %s' % counter)
+    bingle.info("Mingle cards/bugs updated updated:")
+    for cardToUpdate in cardsToUpdate:
+        bingle.info('%scards/%s, http://bugzilla.wikimedia.org/%s' % (mingleUrlBase, cardToUpdate[0], cardToUpdate[1]))
